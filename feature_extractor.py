@@ -1,26 +1,34 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
-from deepface import DeepFace
-from utils import get_data_loaders
-from params import NUM_EPOCHS
 from tqdm import tqdm
+import torch
+
+from facenet_pytorch import InceptionResnetV1
+
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# Load VGGFace model
+vgg_face = InceptionResnetV1(pretrained='vggface2').eval().to(device)
 
 def extract_deepface_features_from_loader(loader):
     features = []
     labels = []
-
     for images, batch_labels in tqdm(loader):
-        images_numpy = images.permute(0, 2, 3, 1).numpy()
-        
-        for image_numpy in images_numpy:
-            image_features = DeepFace.represent(image_numpy, model_name='DeepFace', enforce_detection=False)
-            features.append(image_features[0]["embedding"]) 
+        # Convert images to tensor and move to GPU if available
+        images = images.to(device)
+
+        # Extract features
+        with torch.no_grad():
+            embeddings = vgg_face(images)
+
+        # Append features and labels
+        features.append(embeddings.cpu().numpy())
         labels.extend(batch_labels)
 
     features = np.vstack(features)
     labels = np.vstack(labels)
 
     return features, labels
+
 
 def extract_features(train_loader, test_loader, num_epochs):
     train_features = []

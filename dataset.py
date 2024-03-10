@@ -4,7 +4,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 class CustomDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
+    def __init__(self, csv_file, root_dir, transform=None, selected_labels=None):
         self.data = pd.read_csv(csv_file)
         self.root_dir = root_dir
         self.transform = transform
@@ -12,7 +12,6 @@ class CustomDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
-        #return 4
     
     def __getitem__(self, idx):
         img_name = os.path.join(self.root_dir, self.data.iloc[idx, 0])
@@ -20,7 +19,4 @@ class CustomDataset(Dataset):
         label = self.data.iloc[idx, 1]
         transformed_image = self.transform(image)
         return transformed_image, label
-    
-    def numeric_to_string_label(self, numeric_label):
-        return self.label_mapping[numeric_label]
 
