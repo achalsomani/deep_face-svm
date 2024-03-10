@@ -16,19 +16,6 @@ def get_data_loaders(train_transforms, test_transforms):
     
     return train_loader, test_loader
 
-def calculate_accuracy(model, data_loader):
-    correct = 0
-    total = 0
-    model.eval()
-    with torch.no_grad():
-        for images, labels in data_loader:
-            images, labels = images.to(device), labels.to(device)
-            outputs = model(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    return correct / total
-
 def save_images_with_labels(images, labels, folder_path, epoch):
     folder_path = Path(folder_path)
     folder_path.mkdir(parents=True, exist_ok=True)

@@ -2,7 +2,6 @@ from torchvision.transforms import transforms
 from params import STARTING_SHAPE, INPUT_SHAPE
 
 
-# Define train transforms
 train_transforms = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize(STARTING_SHAPE),  # Resize to 256x256
