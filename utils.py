@@ -1,20 +1,5 @@
-import torch
-from torch.utils.data import DataLoader
-from dataset import CustomDataset
+from pathlib import Path
 from torchvision.transforms import transforms
-from paths import DATA_PATH, CSV_FILE, TESTING_DATA_PATH, TESTING_CSV_FILE
-from params import BATCH_SIZE, device
-
-def get_data_loaders(train_transforms, test_transforms):
-    # Load train and test datasets
-    train_dataset = CustomDataset(csv_file=CSV_FILE, root_dir=DATA_PATH, transform=train_transforms)
-    test_dataset = CustomDataset(csv_file=TESTING_CSV_FILE, root_dir=TESTING_DATA_PATH, transform=test_transforms)
-    
-    # Create data loaders
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    
-    return train_loader, test_loader
 
 def save_images_with_labels(images, labels, folder_path, epoch):
     folder_path = Path(folder_path)
